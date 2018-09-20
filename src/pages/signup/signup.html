@@ -1,7 +1,7 @@
-<ion-header hidden>
+<ion-header>
     <ion-navbar color="danger">
         <ion-title text-center>
-            Feedly
+        
         </ion-title>
     </ion-navbar>
 </ion-header>
@@ -13,10 +13,16 @@
     
     <ion-item text-center no-lines>
         <h1>Feedly</h1>
-        <h6>an app for  continuous feed</h6>
+        <h6>an app for continuous feed</h6>
     </ion-item>
     
     <ion-grid style="width: 75%;">
+        
+        <ion-row class="rowStyle">
+            <ion-icon name="person" color="danger"></ion-icon>
+            <ion-input type="text" placeholder="your name"></ion-input>
+        </ion-row>
+        
         <ion-row class="rowStyle">
             <ion-icon name="mail" color="danger"></ion-icon>
             <ion-input type="email" placeholder="your email"></ion-input>
@@ -30,13 +36,13 @@
         
         <ion-row>
             <button ion-button block round outline text-capitalize color="light" style="margin-top: 20px;">
-                Login
+                Sign up
             </button>
         </ion-row>
     </ion-grid>
     
-    <button ion-button block clear text-lowercase color="light" (click)="gotoSignUp()">
-        Don't have an account? Sign up
+    <button ion-button block clear text-lowercase color="light" (click)="goBack()">
+        Already have an account? Log in
     </button>
-    
+
 </ion-content>
