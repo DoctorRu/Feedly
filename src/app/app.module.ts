@@ -4,20 +4,21 @@ import {IonicApp, IonicErrorHandler, IonicModule} from 'ionic-angular';
 import {SplashScreen} from '@ionic-native/splash-screen';
 import {StatusBar} from '@ionic-native/status-bar';
 import firebase from 'firebase/app';
+import * as keys_firebase from "../keys/firebase";
 
 import {MyApp} from './app.component';
 import {LoginPage} from '../pages/login/login';
 import {SignupPage} from "../pages/signup/signup";
-import * as keys_firebase from "../keys/firebase";
+import {FeedPage} from "../pages/feed/feed";
 
 firebase.initializeApp(keys_firebase.config);
-
 
 @NgModule({
     declarations: [
         MyApp,
         LoginPage,
-        SignupPage
+        SignupPage,
+        FeedPage
     ],
     imports: [
         BrowserModule,
@@ -27,7 +28,8 @@ firebase.initializeApp(keys_firebase.config);
     entryComponents: [
         MyApp,
         LoginPage,
-        SignupPage
+        SignupPage,
+        FeedPage
     ],
     providers: [
         StatusBar,

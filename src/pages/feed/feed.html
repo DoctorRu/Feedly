@@ -1,0 +1,71 @@
+<ion-header>
+    
+    <ion-navbar color="danger">
+        <ion-title>Your feed</ion-title>
+        
+        <ion-buttons end>
+            
+            <button ion-button icon-only clear>
+                <ion-icon name="log-out"></ion-icon>
+            </button>
+        
+        </ion-buttons>
+    
+    </ion-navbar>
+
+</ion-header>
+
+
+<ion-content>
+    
+    <ion-row margin class="rowStyle">
+        
+        <button ion-button icon-only color="danger" clear>
+            <ion-icon name="images"></ion-icon>
+        </button>
+        
+        <ion-input type="text" placeholder="Say something..."></ion-input>
+        
+        <button ion-button icon-only color="danger" clear>
+            <ion-icon name="send"></ion-icon>
+        </button>
+    
+    </ion-row>
+    
+    <ion-card>
+        
+        <ion-item-divider color="danger">
+            Bob Says:
+        </ion-item-divider>
+        
+        <ion-item text-wrap>
+            I'm so happy and ecited about developing Feedly using Ionic and Firebase
+        </ion-item>
+        
+        <ion-row class="bottom-bar">
+            
+            <ion-col>
+                <button ion-button block icon-left clear small color="danger" class="border-right">
+                    <ion-icon name="thumbs-up"></ion-icon>
+                    <small>12 Likes</small>
+                </button>
+            </ion-col>
+            
+            <ion-col>
+                <button ion-button block icon-left clear small color="danger" class="border-right">
+                    <ion-icon name="text"></ion-icon>
+                    <small>4 Comments</small>
+                </button>
+            </ion-col>
+            
+            <ion-col>
+                <button ion-button block icon-left clear small color="danger">
+                    <ion-icon name="clock"></ion-icon>
+                    <small>5 mins ago</small>
+                </button>
+            </ion-col>
+        </ion-row>
+    
+    </ion-card>
+
+</ion-content>

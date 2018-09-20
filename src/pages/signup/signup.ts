@@ -2,6 +2,8 @@ import {Component} from '@angular/core';
 import {AlertController, NavController, NavParams, ToastController} from 'ionic-angular';
 import firebase from 'firebase';
 
+import {FeedPage} from "../feed/feed";
+
 @Component({
     selector: 'page-signup',
     templateUrl: 'signup.html',
@@ -43,6 +45,9 @@ export class SignupPage {
                                 ]
                             })
                             .present();
+                        
+                        this.navCtrl.setRoot(FeedPage)
+                        
                     })
                     .catch(err => {
                         this.toastCtrl.create({
