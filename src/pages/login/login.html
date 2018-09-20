@@ -13,23 +13,31 @@
     
     <ion-item text-center no-lines>
         <h1>Feedly</h1>
-        <h6>an app for  continuous feed</h6>
+        <h6>an app for continuous feed</h6>
     </ion-item>
     
     <ion-grid style="width: 75%;">
         <ion-row class="rowStyle">
             <ion-icon name="mail" color="danger"></ion-icon>
-            <ion-input type="email" placeholder="your email"></ion-input>
+            <ion-input type="email" placeholder="your email"
+                       [(ngModel)]="email"
+            >
+            </ion-input>
         </ion-row>
         
         
         <ion-row class="rowStyle">
             <ion-icon name="key" color="danger"></ion-icon>
-            <ion-input type="password" placeholder="your password"></ion-input>
+            <ion-input type="password" placeholder="your password"
+                       [(ngModel)]="password"
+            >
+            </ion-input>
         </ion-row>
         
         <ion-row>
-            <button ion-button block round outline text-capitalize color="light" style="margin-top: 20px;">
+            <button ion-button block round outline text-capitalize color="light" style="margin-top: 20px;"
+                    (click)="login()"
+            >
                 Login
             </button>
         </ion-row>
@@ -38,5 +46,5 @@
     <button ion-button block clear text-lowercase color="light" (click)="gotoSignUp()">
         Don't have an account? Sign up
     </button>
-    
+
 </ion-content>
