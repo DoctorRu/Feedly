@@ -29,21 +29,20 @@
         </ion-input>
         
         <button ion-button icon-only color="danger" clear
-                (click)="post()"
-        >
+                (click)="post()">
             <ion-icon name="send"></ion-icon>
         </button>
     
     </ion-row>
     
-    <ion-card>
+    <ion-card *ngFor="let post of posts">
         
         <ion-item-divider color="danger">
-            Bob Says:
+            {{post.data().owner_name}}
         </ion-item-divider>
         
         <ion-item text-wrap>
-            I'm so happy and ecited about developing Feedly using Ionic and Firebase
+            {{post.data().message}}
         </ion-item>
         
         <ion-row class="bottom-bar">
@@ -65,7 +64,7 @@
             <ion-col>
                 <button ion-button block icon-left clear small color="danger">
                     <ion-icon name="clock"></ion-icon>
-                    <small>5 mins ago</small>
+                    <small>{{ ago(post.data().created.toDate()) }} ago</small>
                 </button>
             </ion-col>
         </ion-row>
