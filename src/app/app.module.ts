@@ -3,7 +3,8 @@ import {ErrorHandler, NgModule} from '@angular/core';
 import {IonicApp, IonicErrorHandler, IonicModule} from 'ionic-angular';
 import {SplashScreen} from '@ionic-native/splash-screen';
 import {StatusBar} from '@ionic-native/status-bar';
-import firebase from 'firebase/app';
+import firebase from 'firebase';
+
 import * as keys_firebase from "../keys/firebase";
 
 import {MyApp} from './app.component';
@@ -12,6 +13,11 @@ import {SignupPage} from "../pages/signup/signup";
 import {FeedPage} from "../pages/feed/feed";
 
 firebase.initializeApp(keys_firebase.config);
+const firestore = firebase.firestore();
+const settings = {
+    timestampsInSnapshots: true
+};
+firestore.settings(settings);
 
 @NgModule({
     declarations: [

@@ -1,7 +1,8 @@
 import {Component} from '@angular/core';
 import {NavController, ToastController} from 'ionic-angular';
-import {SignupPage} from "../signup/signup";
 import firebase from 'firebase';
+
+import {SignupPage} from "../signup/signup";
 import {FeedPage} from "../feed/feed";
 
 
