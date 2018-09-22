@@ -40,23 +40,42 @@ export class FeedPage {
     }
     
     getPosts() {
-        // this.posts = [];
         
-        firebase.firestore().collection("posts")
+        let query = firebase.firestore().collection("posts")
             .orderBy("created", "desc")
-            .limit(this.pageSize)
-            .get()
+            .limit(this.pageSize);
+        
+        query.onSnapshot(snapshot => {
+                let changedDocs = snapshot.docChanges();
+                
+                changedDocs.forEach(change => {
+                    if (change.type == 'added') {
+                    
+                    } else if (change.type == 'modified') {
+                    
+                    } else if (change.type == 'removed') {
+                    
+                    }
+                    
+                    console.log(`Document with id: ${change.doc.id} has been ${change.type}.`);
+                });
+            }
+        );
+        
+        query.get()
             .then(docs => {
                 
                 docs.forEach(doc => {
-                    this.posts.push(doc);
-                });
+                        this.posts
+                            .push(doc);
+                    }
+                );
                 
                 this.cursor = _.last(this.posts);
                 console.log('cursor ', this.cursor);
-                
-                // console.log('posts', this.posts);
-                
+
+// console.log('posts', this.posts);
+            
             })
             .catch(err => console.log('err ', err))
         
