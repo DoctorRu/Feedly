@@ -1,8 +1,10 @@
 import {Component} from '@angular/core';
-import {NavController, NavParams} from 'ionic-angular';
+import {LoadingController, NavController, NavParams, ToastController} from 'ionic-angular';
 import firebase from "firebase";
 import moment from "moment";
 import * as _ from 'lodash';
+
+import {LoginPage} from "../login/login";
 
 @Component({
     selector: 'page-feed',
@@ -12,12 +14,14 @@ export class FeedPage {
     
     message: string = '';
     posts: any[] = [];
-    pageSize: number = 5;
+    pageSize: number = 10;
     cursor: any;
     infiniteEvent: any;
     
     constructor(public navCtrl: NavController,
-                public navParams: NavParams) {
+                public navParams: NavParams,
+                private loadingCtrl: LoadingController,
+                private toastCtrl: ToastController) {
         
         this.getPosts();
     }
@@ -32,6 +36,14 @@ export class FeedPage {
             .then(doc => {
                 console.log('created ', doc);
                 
+                this.message = '';
+                
+                let toast = this.toastCtrl.create({
+                        message: 'Your post has been created successfully.',
+                        duration: 3000
+                    })
+                    .present();
+                
                 this.getPosts();
             })
             .catch(err => {
@@ -39,43 +51,49 @@ export class FeedPage {
             })
     }
     
+    
     getPosts() {
+        this.posts = [];
+        
+        let loading = this.loadingCtrl.create({
+            content: 'Loading feed...'
+        });
+        
+        loading.present();
         
         let query = firebase.firestore().collection("posts")
             .orderBy("created", "desc")
             .limit(this.pageSize);
         
-        query.onSnapshot(snapshot => {
-                let changedDocs = snapshot.docChanges();
-                
-                changedDocs.forEach(change => {
-                    if (change.type == 'added') {
-                    
-                    } else if (change.type == 'modified') {
-                    
-                    } else if (change.type == 'removed') {
-                    
-                    }
-                    
-                    console.log(`Document with id: ${change.doc.id} has been ${change.type}.`);
-                });
-            }
-        );
+        // query.onSnapshot(snapshot => {
+        //     let changedDocs = snapshot.docChanges();
+        //
+        //     changedDocs.forEach(change => {
+        //         if (change.type == 'added') {
+        //
+        //         } else if (change.type == 'modified') {
+        //
+        //         } else if (change.type == 'removed') {
+        //
+        //         }
+        //
+        //         console.log(`Document with id: ${change.doc.id} has been ${change.type}.`);
+        //     });
+        // });
         
         query.get()
             .then(docs => {
-                
                 docs.forEach(doc => {
-                        this.posts
-                            .push(doc);
+                        this.posts.push(doc);
                     }
                 );
                 
+                loading.dismissAll();
+                
                 this.cursor = _.last(this.posts);
                 console.log('cursor ', this.cursor);
-
-// console.log('posts', this.posts);
-            
+                
+                // console.log('posts', this.posts);
             })
             .catch(err => console.log('err ', err))
         
@@ -111,10 +129,12 @@ export class FeedPage {
             .catch(err => console.log('err ', err))
     }
     
+    
     ago(time) {
         let difference = moment(time).diff(moment());
         return moment.duration(difference).humanize();
     }
+    
     
     refresh(event) {
         this.posts = [];
@@ -127,6 +147,20 @@ export class FeedPage {
         
         event.complete();
         
+    }
+    
+    
+    logout() {
+        firebase.auth().signOut()
+            .then(() => {
+                
+                let toast = this.toastCtrl.create({
+                    message: 'You have been logged out successfully.',
+                    duration: 3000
+                }).present();
+                
+                this.navCtrl.setRoot(LoginPage)
+            });
     }
     
 }
