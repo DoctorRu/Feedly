@@ -12,8 +12,9 @@ export class FeedPage {
     
     message: string = '';
     posts: any[] = [];
-    pageSize: number = 3;
+    pageSize: number = 5;
     cursor: any;
+    infiniteEvent: any;
     
     constructor(public navCtrl: NavController,
                 public navParams: NavParams) {
@@ -39,7 +40,7 @@ export class FeedPage {
     }
     
     getPosts() {
-        this.posts = [];
+        // this.posts = [];
         
         firebase.firestore().collection("posts")
             .orderBy("created", "desc")
@@ -79,10 +80,12 @@ export class FeedPage {
                 
                 if (docs.size < this.pageSize) {
                     event.enable(false);
+                    this.infiniteEvent = event;
+                    
                 } else {
                     event.complete();
                     this.cursor = _.last(this.posts);
-    
+                    
                 }
                 
             })
@@ -92,6 +95,19 @@ export class FeedPage {
     ago(time) {
         let difference = moment(time).diff(moment());
         return moment.duration(difference).humanize();
+    }
+    
+    refresh(event) {
+        this.posts = [];
+        
+        this.getPosts();
+        
+        if (this.infiniteEvent) {
+            this.infiniteEvent.enable(true);
+        }
+        
+        event.complete();
+        
     }
     
 }
