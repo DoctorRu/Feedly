@@ -31,7 +31,7 @@ export class FeedPage {
         this.getPosts();
     }
     
-    post() {
+    uploadPost() {
         firebase.firestore().collection("posts").add({
                 message: this.message,
                 created: firebase.firestore.FieldValue.serverTimestamp(),
@@ -41,13 +41,18 @@ export class FeedPage {
             .then(doc => {
                 console.log('created ', doc);
                 
+                if (this.image) {
+                    this.upload(doc.id)
+                }
+                
                 this.message = '';
                 
                 let toast = this.toastCtrl.create({
-                        message: 'Your post has been created successfully.',
-                        duration: 3000
-                    })
-                    .present();
+                    message: 'Your post has been created successfully.',
+                    duration: 3000
+                });
+                
+                toast.present();
                 
                 this.getPosts();
             })
@@ -162,7 +167,9 @@ export class FeedPage {
                 let toast = this.toastCtrl.create({
                     message: 'You have been logged out successfully.',
                     duration: 3000
-                }).present();
+                });
+                
+                toast.present();
                 
                 this.navCtrl.setRoot(LoginPage)
             });
@@ -191,9 +198,50 @@ export class FeedPage {
             .then(base64Image => {
                 console.log(base64Image);
                 
-                this.image =  "data:image/png;base64," + base64Image;
+                this.image = "data:image/png;base64," + base64Image;
             })
             .catch(err => console.log('Camera error', err))
     }
     
+    upload(name: string) {
+        let ref = firebase.storage().ref("postImages/" + name);
+        
+        let uploadTask = ref.putString(this.image.split(',')[ 1 ], "base64");
+        
+        uploadTask.on("state_changed", takeSnapshot => {
+            console.log(takeSnapshot)
+        }, err => {
+            console.log('Upload error: ', err);
+        }, () => {
+            console.log("Upload complete");
+            
+            uploadTask.snapshot.ref.getDownloadURL()
+                .then(url => {
+                    console.log(('File url: '), url)
+                })
+            
+        })
+    }
+    
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
