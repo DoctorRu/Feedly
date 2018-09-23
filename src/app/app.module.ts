@@ -5,6 +5,8 @@ import {SplashScreen} from '@ionic-native/splash-screen';
 import {StatusBar} from '@ionic-native/status-bar';
 import firebase from 'firebase';
 
+import {Camera} from "@ionic-native/camera";
+
 import * as keys_firebase from "../keys/firebase";
 
 import {MyApp} from './app.component';
@@ -40,7 +42,10 @@ firestore.settings(settings);
     providers: [
         StatusBar,
         SplashScreen,
-        {provide: ErrorHandler, useClass: IonicErrorHandler}
+        Camera,
+        {
+            provide: ErrorHandler, useClass: IonicErrorHandler
+        }
     ]
 })
 export class AppModule {

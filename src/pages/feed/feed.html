@@ -20,7 +20,7 @@
     
     <ion-row margin class="rowStyle">
         
-        <button ion-button icon-only color="danger" clear>
+        <button ion-button icon-only color="danger" clear (click)="addPhoto()">
             <ion-icon name="images"></ion-icon>
         </button>
         
@@ -35,14 +35,16 @@
     
     </ion-row>
     
+    <ion-row margin *ngIf="image">
+        <ion-card class="round">
+            <img [src]="image" alt="Photo preview" class="round-corners">
+        </ion-card>
+    </ion-row>
     
     
     <ion-refresher (ionRefresh)="refresh($event)">
-        <ion-refresher-content>
-        
-        </ion-refresher-content>
+        <ion-refresher-content></ion-refresher-content>
     </ion-refresher>
-    
     
     
     <ion-card *ngFor="let post of posts">
