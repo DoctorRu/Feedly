@@ -19,15 +19,19 @@
 <ion-content>
     
     <ion-row margin class="rowStyle">
+        <!--New  post-->
         
+        <!--Take a photo-->
         <button ion-button icon-only color="danger" clear (click)="addPhoto()">
             <ion-icon name="images"></ion-icon>
         </button>
         
+        <!--Post text-->
         <ion-input type="text" placeholder="Say something..."
                    [(ngModel)]="message">
         </ion-input>
         
+        <!--Upload post-->
         <button ion-button icon-only color="danger" clear (click)="uploadPost()">
             <ion-icon name="send"></ion-icon>
         </button>
@@ -35,6 +39,8 @@
     </ion-row>
     
     <ion-row margin *ngIf="image">
+        
+        <!--Photo preview-->
         <ion-card class="round">
             <img [src]="image" alt="Photo preview" class="round-corners">
         </ion-card>
@@ -47,6 +53,8 @@
     
     
     <ion-card *ngFor="let post of posts">
+        
+        <!--Display posts-->
         
         <ion-item-divider color="danger">
             {{post.data().owner_name}}
@@ -61,6 +69,7 @@
         <ion-row class="bottom-bar">
             
             <ion-col>
+                <!--Likes-->
                 <button ion-button block icon-left clear small color="danger" class="border-right" (click)="like(post)">
                     <ion-icon name="thumbs-up"></ion-icon>
                     <small>{{ post.data().likesCount || 0}}</small>
@@ -68,7 +77,8 @@
             </ion-col>
             
             <ion-col>
-                <button ion-button block icon-left clear small color="danger" class="border-right">
+                <!--Comments-->
+                <button ion-button block icon-left clear small color="danger" class="border-right" (click)="comment(post)">
                     <ion-icon name="text"></ion-icon>
                     <small>4</small>
                 </button>

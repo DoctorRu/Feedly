@@ -1,5 +1,12 @@
 import {Component} from '@angular/core';
-import {LoadingController, NavController, NavParams, ToastController} from 'ionic-angular';
+import {
+    ActionSheetController,
+    AlertController,
+    LoadingController,
+    NavController,
+    NavParams,
+    ToastController
+} from 'ionic-angular';
 import firebase from "firebase";
 import {HttpClient} from "@angular/common/http";
 import {Camera, CameraOptions} from "@ionic-native/camera";
@@ -27,7 +34,9 @@ export class FeedPage {
                 private loadingCtrl: LoadingController,
                 private toastCtrl: ToastController,
                 private camera: Camera,
-                private http: HttpClient) {
+                private http: HttpClient,
+                private actionSheetCtr: ActionSheetController,
+                private alertCtrl: AlertController) {
         
         this.getPosts();
     }
@@ -291,13 +300,79 @@ export class FeedPage {
                 },
                 err => {
                     console.log(err)
-    
+                    
                     toast.setMessage("An error has ocurred. Please try again later!");
-    
+                    
                     setTimeout(() => {
                         toast.dismiss();
                     }, 3000)
-                })
+                }
+            )
+    }
+    
+    comment(post) {
+        
+        this.actionSheetCtr.create(
+            {
+                buttons: [
+                    {
+                        text: "View all comments",
+                        handler: () => {
+                        }
+                    },
+                    {
+                        text: "New comment",
+                        handler: () => {
+                            
+                            this.alertCtrl.create({
+                                title: "New comment",
+                                message: "Type your comment",
+                                inputs: [
+                                    {
+                                        name: "comment",
+                                        type: "text"
+                                    }
+                                ],
+                                buttons: [
+                                    {
+                                        text: "Cancel"
+                                    },
+                                    {
+                                        text: "Post",
+                                        handler: (data) => {
+                                            
+                                            if (data.comment) {
+                                                firebase.firestore().collection("comments").add({
+                                                        text: data.comment,
+                                                        post: post.id,
+                                                        owner: firebase.auth().currentUser.uid,
+                                                        owner_name: firebase.auth().currentUser.displayName,
+                                                        created: firebase.firestore.FieldValue.serverTimestamp()
+                                                    })
+                                                    .then(() => {
+                                                        this.toastCtrl.create({
+                                                            message: "Comment posted successfully.",
+                                                            duration: 3000
+                                                        }).present();
+                                                    })
+                                                    .catch(err => {
+                                                        this.toastCtrl.create({
+                                                            message: err.message,
+                                                            duration: 3000
+                                                        }).present();
+                                                    })
+                                            }
+                                            
+                                        }
+                                    }
+                                ]
+                            }).present();
+                        }
+                    }
+                ]
+            }
+        ).present();
+        
     }
 }
 
