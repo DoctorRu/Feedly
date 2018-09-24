@@ -55,13 +55,15 @@
         <ion-item text-wrap>
             {{post.data().message}}
         </ion-item>
+    
+        <img [src]="post.data().image" alt="Post attached image" *ngIf="post.data().image">
         
         <ion-row class="bottom-bar">
             
             <ion-col>
                 <button ion-button block icon-left clear small color="danger" class="border-right">
                     <ion-icon name="thumbs-up"></ion-icon>
-                    <small>12</small>
+                    <small>{{ post.data().likesCount }}</small>
                 </button>
             </ion-col>
             

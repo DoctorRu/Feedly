@@ -42,10 +42,11 @@ export class FeedPage {
                 console.log('created ', doc);
                 
                 if (this.image) {
-                    this.upload(doc.id)
+                    this.uploadImage(doc.id)
                 }
                 
                 this.message = '';
+                this.image = undefined;
                 
                 let toast = this.toastCtrl.create({
                     message: 'Your post has been created successfully.',
@@ -59,6 +60,57 @@ export class FeedPage {
             .catch(err => {
                 console.log('err ', err)
             })
+    }
+    
+    
+    uploadImage(name: string) {
+        return new Promise((resolve, reject) => {
+            
+            let uploading = this.loadingCtrl.create({
+                content: 'Uploading image...'
+            });
+            
+            uploading.present();
+            
+            let ref = firebase.storage().ref("postImages/" + name);
+            
+            let uploadTask = ref.putString(this.image.split(',')[ 1 ], "base64");
+            
+            uploadTask.on("state_changed", (taskSnapshot: any) => {
+                
+                console.log(taskSnapshot);
+                
+                let percentage = taskSnapshot.bytesTransferred / taskSnapshot.totalBytes * 100;
+                uploading.setContent("Uploaded " + Math.round(percentage) + "%");
+                
+            }, err => {
+                console.log('Upload error: ', err);
+                
+            }, () => {
+                console.log("Upload complete");
+                
+                uploadTask.snapshot.ref.getDownloadURL()
+                    .then(url => {
+                        console.log(('File url: '), url);
+                        
+                        firebase.firestore().collection("posts").doc(name).update({
+                                image: url
+                            })
+                            .then(() => {
+                                uploading.dismiss();
+                                resolve();
+                            })
+                            .catch(() => {
+                                uploading.dismiss();
+                                reject();
+                            })
+                    })
+                    .catch(() => {
+                        uploading.dismiss();
+                        reject();
+                    })
+            })
+        });
     }
     
     
@@ -203,25 +255,6 @@ export class FeedPage {
             .catch(err => console.log('Camera error', err))
     }
     
-    upload(name: string) {
-        let ref = firebase.storage().ref("postImages/" + name);
-        
-        let uploadTask = ref.putString(this.image.split(',')[ 1 ], "base64");
-        
-        uploadTask.on("state_changed", takeSnapshot => {
-            console.log(takeSnapshot)
-        }, err => {
-            console.log('Upload error: ', err);
-        }, () => {
-            console.log("Upload complete");
-            
-            uploadTask.snapshot.ref.getDownloadURL()
-                .then(url => {
-                    console.log(('File url: '), url)
-                })
-            
-        })
-    }
     
 }
 
