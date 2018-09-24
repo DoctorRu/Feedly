@@ -5,11 +5,11 @@ admin.initializeApp(functions.config().firebase);
 
 export const updateLikesCount = functions.https.onRequest((request, response) => {
     
-    console.log(request.body);
+    console.log('request> ', request.body);
     
     const postId = request.body.postId;
     const userId = request.body.userId;
-    const action = request.body.action; // Werde sein 'mag' oder 'nicht mag'
+    const action = request.body.action; // Werde sein 'mogën' oder 'nicht mogën'
     
     admin.firestore().collection("posts").doc(postId).get()
         .then(result => {
@@ -28,10 +28,12 @@ export const updateLikesCount = functions.https.onRequest((request, response) =>
             }
             
             admin.firestore().collection("posts").doc(postId).update(updateData)
-                .then( () => {
+                .then(() => {
                     response.status(200).send('Done');
                 })
-                .catch(err => console.log('trigger update error: ', err))
+                .catch(err => {
+                    response.status(err.code).send(err.message);
+                })
             
         })
         .catch(err => console.log('trigger get error: ', err))

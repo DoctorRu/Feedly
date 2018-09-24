@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 import {LoadingController, NavController, NavParams, ToastController} from 'ionic-angular';
 import firebase from "firebase";
-
+import {HttpClient} from "@angular/common/http";
 import {Camera, CameraOptions} from "@ionic-native/camera";
 
 import moment from "moment";
@@ -26,7 +26,8 @@ export class FeedPage {
                 public navParams: NavParams,
                 private loadingCtrl: LoadingController,
                 private toastCtrl: ToastController,
-                private camera: Camera) {
+                private camera: Camera,
+                private http: HttpClient) {
         
         this.getPosts();
     }
@@ -127,21 +128,26 @@ export class FeedPage {
             .orderBy("created", "desc")
             .limit(this.pageSize);
         
-        // query.onSnapshot(snapshot => {
-        //     let changedDocs = snapshot.docChanges();
-        //
-        //     changedDocs.forEach(change => {
-        //         if (change.type == 'added') {
-        //
-        //         } else if (change.type == 'modified') {
-        //
-        //         } else if (change.type == 'removed') {
-        //
-        //         }
-        //
-        //         console.log(`Document with id: ${change.doc.id} has been ${change.type}.`);
-        //     });
-        // });
+        query.onSnapshot(snapshot => {
+            let changedDocs = snapshot.docChanges();
+            
+            changedDocs.forEach(change => {
+                if (change.type == 'added') {
+                
+                } else if (change.type == 'modified') {
+                    for (let i = 0; i < this.posts.length; i++) {
+                        if (this.posts[ i ].id == change.doc.id) {
+                            this.posts[ i ] = change.doc;
+                        }
+                    }
+                    
+                } else if (change.type == 'removed') {
+                
+                }
+                
+                console.log(`Document with id: ${change.doc.id} has been ${change.type}.`);
+            });
+        });
         
         query.get()
             .then(docs => {
@@ -256,6 +262,43 @@ export class FeedPage {
     }
     
     
+    like(post) {
+        
+        let body = {
+            postId: post.id,
+            userId: firebase.auth().currentUser.uid,
+            action: post.data().likes && post.data().likes[ firebase.auth().currentUser.uid ] == true ? "unlike" : "like"
+        };
+        
+        let toast = this.toastCtrl.create({
+            message: "Updating like... please wait."
+        });
+        
+        toast.present();
+        
+        this.http.post("https://us-central1-feedlyapp-9b845.cloudfunctions.net/updateLikesCount",
+            JSON.stringify(body),
+            {responseType: "text"})
+            .subscribe(
+                data => {
+                    console.log(data);
+                    
+                    toast.setMessage("Like updated!");
+                    
+                    setTimeout(() => {
+                        toast.dismiss();
+                    }, 3000)
+                },
+                err => {
+                    console.log(err)
+    
+                    toast.setMessage("An error has ocurred. Please try again later!");
+    
+                    setTimeout(() => {
+                        toast.dismiss();
+                    }, 3000)
+                })
+    }
 }
 
 
