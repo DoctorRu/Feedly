@@ -11,6 +11,45 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const functions = require("firebase-functions");
 const admin = require("firebase-admin");
 admin.initializeApp(functions.config().firebase);
+const sendNotification = (owner_uid, type) => {
+    return new Promise((resolve, reject) => {
+        return admin.firestore().collection("users").doc(owner_uid).get()
+            .then(doc => {
+            if (doc.exists && doc.data().token) {
+                if (type == "new_comment") {
+                    admin.messaging().sendToDevice(doc.data().token, {
+                        data: {
+                            title: "A new comment has been made on your post.",
+                            sound: "default",
+                            body: "Tap to check"
+                        }
+                    })
+                        .then(sent => {
+                        resolve(sent);
+                    })
+                        .catch(err => {
+                        reject(err);
+                    });
+                }
+                else if (type == "new_like") {
+                    admin.messaging().sendToDevice(doc.data().token, {
+                        data: {
+                            title: "Someone liked your post on Feedly",
+                            sound: "default",
+                            body: "Tap to check"
+                        }
+                    })
+                        .then(sent => {
+                        resolve(sent);
+                    })
+                        .catch(err => {
+                        reject(err);
+                    });
+                }
+            }
+        });
+    });
+};
 exports.updateLikesCount = functions.https.onRequest((request, response) => {
     console.log('request> ', request.body);
     const postId = request.body.postId;
@@ -30,9 +69,12 @@ exports.updateLikesCount = functions.https.onRequest((request, response) => {
             updateData[`likes.${userId}`] = false;
         }
         admin.firestore().collection("posts").doc(postId).update(updateData)
-            .then(() => {
+            .then(() => __awaiter(this, void 0, void 0, function* () {
+            if (action == "like") {
+                yield sendNotification(result.data().owner, "new_like");
+            }
             response.status(200).send('Done');
-        })
+        }))
             .catch(err => {
             response.status(err.code).send(err.message);
         });
@@ -50,7 +92,7 @@ exports.updateCommentsCount = functions.firestore.document('comments/{commentId}
         yield admin.firestore().collection("posts").doc(postId).update({
             "commentsCount": commentsCount
         });
-        return true;
+        return sendNotification(doc.data().owner, "new_comment");
     }
     else {
         return false;

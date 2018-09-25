@@ -182,7 +182,7 @@ export class FeedPage {
                 
                 }
                 
-                console.log(`Document with id: ${change.doc.id} has been ${change.type}.`);
+                // console.log(`Document with id: ${change.doc.id} has been ${change.type}.`);
             });
         });
         
@@ -196,7 +196,7 @@ export class FeedPage {
                 loading.dismissAll();
                 
                 this.cursor = _.last(this.posts);
-                console.log('cursor ', this.cursor);
+                // console.log('cursor ', this.cursor);
                 
                 // console.log('posts', this.posts);
             })
@@ -218,7 +218,7 @@ export class FeedPage {
                     this.posts.push(doc);
                 });
                 
-                console.log('posts', this.posts);
+                // console.log('posts', this.posts);
                 
                 if (docs.size < this.pageSize) {
                     event.enable(false);
@@ -291,7 +291,7 @@ export class FeedPage {
         
         this.camera.getPicture(options)
             .then(base64Image => {
-                console.log(base64Image);
+                // console.log(base64Image);
                 
                 this.image = "data:image/png;base64," + base64Image;
             })
@@ -318,7 +318,7 @@ export class FeedPage {
             {responseType: "text"})
             .subscribe(
                 data => {
-                    console.log(data);
+                    // console.log(data);
                     
                     toast.setMessage("Like updated!");
                     
@@ -327,7 +327,7 @@ export class FeedPage {
                     }, 3000)
                 },
                 err => {
-                    console.log(err)
+                    console.log(err);
                     
                     toast.setMessage("An error has ocurred. Please try again later!");
                     
