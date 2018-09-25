@@ -4,6 +4,8 @@ import {ErrorHandler, NgModule} from '@angular/core';
 import {IonicApp, IonicErrorHandler, IonicModule} from 'ionic-angular';
 import {SplashScreen} from '@ionic-native/splash-screen';
 import {StatusBar} from '@ionic-native/status-bar';
+import { Firebase } from '@ionic-native/firebase';
+
 import firebase from 'firebase';
 
 import {Camera} from "@ionic-native/camera";
@@ -48,6 +50,7 @@ firestore.settings(settings);
         StatusBar,
         SplashScreen,
         Camera,
+        Firebase,
         {
             provide: ErrorHandler, useClass: IonicErrorHandler
         }

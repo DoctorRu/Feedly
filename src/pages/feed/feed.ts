@@ -7,7 +7,10 @@ import {
     NavParams,
     ToastController
 } from 'ionic-angular';
+
 import firebase from "firebase";
+import {Firebase} from '@ionic-native/firebase';
+
 import {HttpClient} from "@angular/common/http";
 import {Camera, CameraOptions} from "@ionic-native/camera";
 
@@ -38,9 +41,32 @@ export class FeedPage {
                 private http: HttpClient,
                 private actionSheetCtr: ActionSheetController,
                 private alertCtrl: AlertController,
-                private modalCtrl: ModalController) {
+                private modalCtrl: ModalController,
+                private firebaseCordova: Firebase) {
         
         this.getPosts();
+        
+        this.firebaseCordova.getToken()
+            .then(token => {
+                console.log('token> ', token);
+                
+                this.updateToken(token, firebase.auth().currentUser.uid);
+            })
+            .catch(err => console.log('Get token error> ', err))
+    }
+    
+    
+    updateToken(token: string, uid: string) {
+        firebase.firestore().collection("users").doc(uid).set({
+                token: token,
+                tokenUpdate: firebase.firestore.FieldValue.serverTimestamp() // Getting the server timestamp
+            }, {
+                merge: true
+            })
+            .then(() => console.log('Token saved to cloud firestore'))
+            .catch(err => {
+                console.log('Error updating token> ', err)
+            })
     }
     
     uploadPost() {
@@ -311,6 +337,7 @@ export class FeedPage {
                 }
             )
     }
+    
     
     comment(post) {
         
