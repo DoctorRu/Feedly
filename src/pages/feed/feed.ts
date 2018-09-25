@@ -2,7 +2,7 @@ import {Component} from '@angular/core';
 import {
     ActionSheetController,
     AlertController,
-    LoadingController,
+    LoadingController, ModalController,
     NavController,
     NavParams,
     ToastController
@@ -15,6 +15,7 @@ import moment from "moment";
 import * as _ from 'lodash';
 
 import {LoginPage} from "../login/login";
+import {CommentsPage} from "../comments/comments";
 
 @Component({
     selector: 'page-feed',
@@ -36,7 +37,8 @@ export class FeedPage {
                 private camera: Camera,
                 private http: HttpClient,
                 private actionSheetCtr: ActionSheetController,
-                private alertCtrl: AlertController) {
+                private alertCtrl: AlertController,
+                private modalCtrl: ModalController) {
         
         this.getPosts();
     }
@@ -318,6 +320,10 @@ export class FeedPage {
                     {
                         text: "View all comments",
                         handler: () => {
+                            
+                            this.modalCtrl.create(CommentsPage, {
+                                "post": post
+                            }).present();
                         }
                     },
                     {

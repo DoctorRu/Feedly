@@ -14,6 +14,7 @@ import {MyApp} from './app.component';
 import {LoginPage} from '../pages/login/login';
 import {SignupPage} from "../pages/signup/signup";
 import {FeedPage} from "../pages/feed/feed";
+import {CommentsPage} from "../pages/comments/comments";
 
 firebase.initializeApp(keys_firebase.config);
 const firestore = firebase.firestore();
@@ -27,7 +28,8 @@ firestore.settings(settings);
         MyApp,
         LoginPage,
         SignupPage,
-        FeedPage
+        FeedPage,
+        CommentsPage
     ],
     imports: [
         BrowserModule,
@@ -39,7 +41,8 @@ firestore.settings(settings);
         MyApp,
         LoginPage,
         SignupPage,
-        FeedPage
+        FeedPage,
+        CommentsPage
     ],
     providers: [
         StatusBar,
