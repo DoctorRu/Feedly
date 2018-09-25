@@ -80,7 +80,7 @@
                 <!--Comments-->
                 <button ion-button block icon-left clear small color="danger" class="border-right" (click)="comment(post)">
                     <ion-icon name="text"></ion-icon>
-                    <small>4</small>
+                    <small>{{ post.data().commentsCount || 0 }} </small>
                 </button>
             </ion-col>
             
