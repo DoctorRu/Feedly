@@ -36,5 +36,6 @@ UserInterfaceState.xcuserstate
 
 
 # Keys
+.firebaserc
 src/keys/
 google-services.json
