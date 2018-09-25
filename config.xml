@@ -85,4 +85,5 @@
     <engine name="android" spec="~6.4.0" />
     <plugin name="cordova-plugin-camera" spec="^4.0.3" />
     <allow-navigation href="http://192.168.42.237:8100" />
+    <plugin name="cordova-plugin-firebase" spec="^2.0.2" />
 </widget>
